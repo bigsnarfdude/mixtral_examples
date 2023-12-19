@@ -54,7 +54,7 @@ tokenized_train_dataset = train_dataset.map(generate_and_tokenize_prompt)
 tokenized_val_dataset = eval_dataset.map(generate_and_tokenize_prompt)
 
 untokenized_text = tokenizer.decode(tokenized_train_dataset[1]['input_ids']) 
-print(untokenized_text)
+#print(untokenized_text)
 
 max_length = 320 
 tokenizer = AutoTokenizer.from_pretrained(base_model_id,padding_side="left",add_eos_token=True,add_bos_token=True)
@@ -74,12 +74,11 @@ def tokenize(prompt):
 
 tokenized_train_dataset = train_dataset.map(generate_and_tokenize_prompt)
 tokenized_val_dataset = eval_dataset.map(generate_and_tokenize_prompt)
-print(tokenized_train_dataset[4]['input_ids'])
+#print(tokenized_train_dataset[4]['input_ids'])
 untokenized_text = tokenizer.decode(tokenized_train_dataset[1]['input_ids']) 
-print(untokenized_text)
-
-print("Target Sentence: " + test_dataset[1]['target'])
-print("Meaning Representation: " + test_dataset[1]['meaning_representation'] + "\n")
+#print(untokenized_text)
+#print("Target Sentence: " + test_dataset[1]['target'])
+#print("Meaning Representation: " + test_dataset[1]['meaning_representation'] + "\n")
 
 eval_prompt = """Given a target sentence construct the underlying meaning representation of the input sentence as a single function with attributes and attribute values.
 This function should describe the target string accurately and the function must be one of the following ['inform', 'request', 'give_opinion', 'confirm', 'verify_attribute', 'suggest', 'request_explanation', 'recommend', 'request_attribute'].
@@ -123,29 +122,27 @@ def print_trainable_parameters(model):
     )
 
 
-config = LoraConfig(
-    r=8,
-    lora_alpha=16,
-    target_modules=[
-        "q_proj",
-        "k_proj",
-        "v_proj",
-        "o_proj",
-        "w1",
-        "w2",
-        "w3",
-        "lm_head",
-    ],
-    bias="none",
-    lora_dropout=0.05,  # Conventional
-    task_type="CAUSAL_LM",
-)
+config = LoraConfig(r=8,
+                    lora_alpha=16,
+                    target_modules=[
+                        "q_proj",
+                        "k_proj",
+                        "v_proj",
+                        "o_proj",
+                        "w1",
+                        "w2",
+                        "w3",
+                        "lm_head"
+                        ],
+                    bias="none",
+                    lora_dropout=0.05,  # Conventional
+                    task_type="CAUSAL_LM")
 
 model = get_peft_model(model, config)
 print_trainable_parameters(model)
 
 model = accelerator.prepare_model(model)
-print(model)
+#print(model)
 
 project = "viggo-finetune"
 base_model_name = "mixtral"
