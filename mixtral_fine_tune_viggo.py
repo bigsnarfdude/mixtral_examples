@@ -21,6 +21,7 @@ test_dataset = load_dataset('gem/viggo', split='test')
 print(train_dataset)
 print(eval_dataset)
 print(test_dataset)
+print("<<<<<<<<<<<<<<<<<<<<<<<<<<< Dataset Loaded >>>>>>>>>>>>>>>>>>>>>>>>>>>)
 
 base_model_id = "mistralai/Mixtral-8x7B-v0.1"
 bnb_config = BitsAndBytesConfig(
@@ -30,6 +31,8 @@ bnb_config = BitsAndBytesConfig(
 )
 
 model = AutoModelForCausalLM.from_pretrained(base_model_id, quantization_config=bnb_config, device_map="auto")
+print(model)
+print("<<<<<<<<<<<<<<<<<<<<<<<<<<< Mixtral Loaded >>>>>>>>>>>>>>>>>>>>>>>>>>>)
 
 tokenizer = AutoTokenizer.from_pretrained(
     base_model_id,
