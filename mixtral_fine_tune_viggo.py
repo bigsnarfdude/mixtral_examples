@@ -9,10 +9,8 @@ from peft import LoraConfig, get_peft_model
 import transformers
 from datetime import datetime
 
-fsdp_plugin = FullyShardedDataParallelPlugin(
-    state_dict_config=FullStateDictConfig(offload_to_cpu=True, rank0_only=False),
-    optim_state_dict_config=FullOptimStateDictConfig(offload_to_cpu=True, rank0_only=False),
-)
+fsdp_plugin = FullyShardedDataParallelPlugin(state_dict_config=FullStateDictConfig(offload_to_cpu=True, rank0_only=False),
+                                             optim_state_dict_config=FullOptimStateDictConfig(offload_to_cpu=True, rank0_only=False),)
 
 accelerator = Accelerator(fsdp_plugin=fsdp_plugin)
 train_dataset = load_dataset('gem/viggo', split='train')
@@ -24,21 +22,15 @@ print(test_dataset)
 print("<<<<<<<<<<<<<<<<<<<<<<<<<<< Dataset Loaded >>>>>>>>>>>>>>>>>>>>>>>>>>>)
 
 base_model_id = "mistralai/Mixtral-8x7B-v0.1"
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_compute_dtype=torch.bfloat16
-)
+bnb_config = BitsAndBytesConfig(load_in_4bit=True,
+                                bnb_4bit_use_double_quant=True,
+                                bnb_4bit_compute_dtype=torch.bfloat16)
 
 model = AutoModelForCausalLM.from_pretrained(base_model_id, quantization_config=bnb_config, device_map="auto")
 print(model)
 print("<<<<<<<<<<<<<<<<<<<<<<<<<<< Mixtral Loaded >>>>>>>>>>>>>>>>>>>>>>>>>>>)
 
-tokenizer = AutoTokenizer.from_pretrained(
-    base_model_id,
-    add_eos_token=True,
-    add_bos_token=True, 
-)
+#tokenizer = AutoTokenizer.from_pretrained(base_model_id,add_eos_token=True,add_bos_token=True)
 
 def tokenize(prompt):
     result = tokenizer(prompt)
@@ -65,12 +57,7 @@ untokenized_text = tokenizer.decode(tokenized_train_dataset[1]['input_ids'])
 print(untokenized_text)
 
 max_length = 320 
-tokenizer = AutoTokenizer.from_pretrained(
-    base_model_id,
-    padding_side="left",
-    add_eos_token=True,  
-    add_bos_token=True,  
-)
+tokenizer = AutoTokenizer.from_pretrained(base_model_id,padding_side="left",add_eos_token=True,add_bos_token=True)
 tokenizer.pad_token = tokenizer.eos_token
 
 
